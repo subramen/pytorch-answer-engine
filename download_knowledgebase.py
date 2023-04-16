@@ -3,7 +3,8 @@ import pickle
 from bs4 import BeautifulSoup as BSHTML
 from requests.models import JSONDecodeError
 from langchain.text_splitter import CharacterTextSplitter
-
+import tempfile
+import subprocess
 
 def preprocess_and_pickle(page_iter, src_name):
     docs = []
