@@ -3,7 +3,8 @@ import pickle
 from bs4 import BeautifulSoup as BSHTML
 from requests.models import JSONDecodeError
 from langchain.text_splitter import CharacterTextSplitter
-
+import tempfile
+import subprocess
 
 def preprocess_and_pickle(page_iter, src_name):
     docs = []
@@ -89,6 +90,7 @@ def get_docs():
 
 
 if __name__ == "__main__":
+    os.mkdir('knowledgebase')
     preprocess_and_pickle(scrape_blogs(), 'blogs')
     preprocess_and_pickle(get_forum(), 'forum')
     preprocess_and_pickle(get_docs(), 'docs')
