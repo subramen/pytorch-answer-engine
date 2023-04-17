@@ -7,7 +7,7 @@ from openai.error import RateLimitError
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores.faiss import FAISS
 
-os.environ['OPENAI_API_KEY'] = "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"
+os.environ['OPENAI_API_KEY'] = ""
 EMBED = 'openai'
 embedding_scheme = OpenAIEmbeddings()
 
