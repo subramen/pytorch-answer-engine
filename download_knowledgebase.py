@@ -90,6 +90,7 @@ def get_docs():
 
 
 if __name__ == "__main__":
+    os.mkdir('knowledgebase')
     preprocess_and_pickle(scrape_blogs(), 'blogs')
     preprocess_and_pickle(get_forum(), 'forum')
     preprocess_and_pickle(get_docs(), 'docs')

@@ -1,10 +1,13 @@
 import os
 import pickle
 import time
+from datetime import datetime
+from pytz import timezone
 from openai.error import RateLimitError
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores.faiss import FAISS
 
+os.environ['OPENAI_API_KEY'] = "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"
 EMBED = 'openai'
 embedding_scheme = OpenAIEmbeddings()
 
@@ -15,11 +18,13 @@ def create_vectorstores(kb_dir='knowledgebase'):
         if os.path.exists(out_path):
             continue
             
-        pages = pickle.load(open(pages_path, 'rb'))
+        pages = pickle.load(open(os.path.join(kb_dir, pages_path), 'rb'))
         index = FAISS.from_documents([pages.pop(0)], embedding_scheme)
 
         i, step = 0, 30
         while i<len(pages):
+            _d = datetime.now(timezone('US/Eastern')).strftime("%Y-%m-%d %H:%M:%S")
+            print(f"{_d}   Processing pages {i}:{i+step}")
             texts = [d.page_content for d in pages[i:i+step]]
             meta = [d.metadata for d in pages[i:i+step]]
             try:
@@ -28,6 +33,9 @@ def create_vectorstores(kb_dir='knowledgebase'):
             except RateLimitError:
                 print("Hit RateLimit @ i=",i)
                 time.sleep(60)
+            except ConnectionResetError:
+                print("Connection was reset")
+                time.sleep(10)
         pickle.dump(index, open(out_path, "wb"))
 
 
